@@ -17,9 +17,8 @@ const upload=multer({
 
 const addDocumentInUpload=(req,res)=>{
     try {
-        console.log("1")
+
         upload(req,res,async(err)=>{
-            console.log("2")
             if(err){
                 res.status(400).json({
                     message:"Error adding document",
@@ -28,7 +27,6 @@ const addDocumentInUpload=(req,res)=>{
             }
             else
             {
-                console.log("3")
                 const document={
                     DocumentName:req.body.DocumentName,
                     DocumentType:req.body.DocumentType,
@@ -36,10 +34,8 @@ const addDocumentInUpload=(req,res)=>{
                     ProjectID:req.body.ProjectID,
                     status:req.body.status
                 }
-                console.log("4")
                  const savedDocument=await documentModel.create(document)
                 //const savedDocument=await document.save()
-                console.log("5")
                 if(savedDocument)
                 {
                     console.log("6")
@@ -49,7 +45,6 @@ const addDocumentInUpload=(req,res)=>{
                     })
                 }
                 else{
-                    console.log("7")
                     res.status(404).json({
                         message:"Document Not Added"
                     })
@@ -58,7 +53,6 @@ const addDocumentInUpload=(req,res)=>{
         })
         
     } catch (error) {
-        console.log("7")
         console.log(error)
         res.status(500).json({
             message:"Server Error",
