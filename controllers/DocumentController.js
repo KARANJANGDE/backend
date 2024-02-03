@@ -61,38 +61,7 @@ const addDocumentInUpload=(req,res)=>{
     }
 }
 
-const addDocument=async(req,res)=>{
-    try {
 
-        const document={
-            DocumentName:req.body.DocumentName,
-            DocumentType:req.body.DocumentType,
-            FilePath:req.body.FilePath,
-            ProjectID:req.body.ProjectID,
-            status:req.body.status
-        }
-        const savedDocument=await documentModel.create(document)
-        if(savedDocument)
-        {
-            res.status(201).json({
-                message:"Document Added Successfully",
-                data:savedDocument
-            })
-        }
-        else
-        {
-            res.status(404).json({
-                message:"Document Not Added"
-            })
-        }
-        
-    } catch (error) {
-        res.status(500).json({
-            message:"Server Error",
-            error:error
-        })
-    }
-}
 
 const getAllDocument=async(req,res)=>{
 
@@ -119,9 +88,80 @@ const getAllDocument=async(req,res)=>{
         })
     }
 }
+
+const deleteDocument=async(req,res)=>{
+    try {
+        const deletedDocument=await documentModel.findByIdAndDelete(req.params.id)
+        if(deletedDocument)
+        {
+            res.status(200).json({
+                message:"Document deleted successfully",
+                data:deletedDocument
+            })
+        }
+        else
+        {
+            res.status(404).json({
+                message:"Document not deleted"
+            })
+        }
+        
+    } catch (error) {
+        res.status(500).json({
+            message:"Server Error",
+            error:error
+        })
+    }
+}
+
+const updateDocument=async(req,res)=>{
+    try {
+        upload(req,res,async(err)=>{
+            if(err)
+            {
+                res.status(400).json({
+                    message:"Error updating document",
+                    error:err
+                })
+            }
+            else
+            {
+                const document={
+                    DocumentName:req.body.DocumentName,
+                    DocumentType:req.body.DocumentType,
+                    FilePath:req.file.path,
+                    ProjectID:req.body.ProjectID,
+                    status:req.body.status
+                }
+                const updatedDocument=await documentModel.findByIdAndUpdate(req.params.id,document,{new:true})
+                if(updatedDocument)
+                {
+                    res.status(200).json({
+                        message:"Document updated successfully",
+                        data:updatedDocument
+                    })
+                }
+                else
+                {
+                    res.status(404).json({
+                        message:"Document not updated"
+                    })
+                }
+            }
+        })
+        
+    } catch (error) {
+        res.status(500).json({
+            message:"Server Error",
+            error:error
+        })
+    }
+}
 module.exports={
 
     addDocumentInUpload,
-    addDocument,
-    getAllDocument
+    getAllDocument,
+    deleteDocument,
+    updateDocument
+
 }
