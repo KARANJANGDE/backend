@@ -1,4 +1,71 @@
 const documentModel=require("../models/DocumentModel")
+const multer =require("multer");
+
+const storage=multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null,'./uploads/');
+    },
+    filename:(req,file,cb)=>{
+    cb(null,file.fieldname);
+    }
+})
+
+const upload=multer({
+    storage:storage,
+    //limits:{fileSize:10000000 }//infile size 1mb
+}).single('document')
+
+const addDocumentInUpload=(req,res)=>{
+    try {
+        console.log("1")
+        upload(req,res,async(err)=>{
+            console.log("2")
+            if(err){
+                res.status(400).json({
+                    message:"Error adding document",
+                    error:err
+                })
+            }
+            else
+            {
+                console.log("3")
+                const document={
+                    DocumentName:req.body.DocumentName,
+                    DocumentType:req.body.DocumentType,
+                    FilePath:req.file.path,
+                    ProjectID:req.body.ProjectID,
+                    status:req.body.status
+                }
+                console.log("4")
+                 const savedDocument=await documentModel.create(document)
+                //const savedDocument=await document.save()
+                console.log("5")
+                if(savedDocument)
+                {
+                    console.log("6")
+                    res.status(201).json({
+                        message:"Document Added Successfully",
+                        data:savedDocument
+                    })
+                }
+                else{
+                    console.log("7")
+                    res.status(404).json({
+                        message:"Document Not Added"
+                    })
+                }
+            }
+        })
+        
+    } catch (error) {
+        console.log("7")
+        console.log(error)
+        res.status(500).json({
+            message:"Server Error",
+            error:error
+        })
+    }
+}
 
 const addDocument=async(req,res)=>{
     try {
@@ -59,6 +126,8 @@ const getAllDocument=async(req,res)=>{
     }
 }
 module.exports={
+
+    addDocumentInUpload,
     addDocument,
     getAllDocument
 }
