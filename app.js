@@ -20,6 +20,7 @@ const typeRoutes=require("./routes/TypeRoutes");
 const equipmentRoutes=require("./routes/EquipmentRoutes");
 const taskRoutes=require("./routes/TaskRoutes");
 const docRoutes=require("./routes/DocumentRoutes");
+const comRoutes=require("./routes/CommunicationRoutes");
 
 //user routes
 //localhost:4000/api/user
@@ -31,6 +32,7 @@ app.use("/api5",typeRoutes);
 app.use("/api6",equipmentRoutes);
 app.use("/api7",taskRoutes);
 app.use("/api8",docRoutes);
+app.use("/api9",comRoutes);
 
 //database connection
 const db=mongoose.connect("mongodb://127.0.0.1:27017/glsproject",{
