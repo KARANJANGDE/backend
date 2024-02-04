@@ -17,7 +17,6 @@ const upload=multer({
 
 const addDocumentInUpload=(req,res)=>{
     try {
-
         upload(req,res,async(err)=>{
             if(err){
                 res.status(400).json({
