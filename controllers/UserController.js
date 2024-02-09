@@ -60,6 +60,29 @@ const getAllUser = async(req,res)=>{
         })
     }
 }
+const getUserbyID=async(req,res)=>{
+    try {
+        const id=req.params.id;
+        const user=await userModel.findById(id)
+        if(user!=null || user!=undefined)
+        res.status(200).json({
+            message:"User Fetched successfully",
+            data: user
+        })
+        else
+        {
+            res.status(404).json({
+                message:"user not found"
+            })
+        }
+        
+    } catch (error) {
+       res.status(500).json({
+        message:"Server Error",
+        error:error
+       })
+    }
+}
 
 //Update
 const updateUser=async(req,res)=>{
@@ -150,6 +173,7 @@ module.exports={
     createUser,
     getAllUser,
     updateUser,
+    getUserbyID,
     deleteUser,
     loginUser
 }
