@@ -22,6 +22,7 @@ const taskRoutes=require("./routes/TaskRoutes");
 const docRoutes=require("./routes/DocumentRoutes");
 const comRoutes=require("./routes/CommunicationRoutes");
 const reportRoutes=require("./routes/ReportRoutes");
+const statusRoutes=require("./routes/ProjectStatusRoutes");
 
 //user routes
 //localhost:4000/api/user
@@ -35,6 +36,8 @@ app.use("/api7",taskRoutes);
 app.use("/api8",docRoutes);
 app.use("/api9",comRoutes);
 app.use("/api10",reportRoutes);
+app.use("/api11",statusRoutes);
+
 
 //database connection
 const db=mongoose.connect("mongodb://127.0.0.1:27017/glsproject",{
