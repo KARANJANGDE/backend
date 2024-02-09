@@ -91,7 +91,7 @@ const updateUser=async(req,res)=>{
         FirstName: req.body.FirstName,
         LastName: req.body.LastName,
         UserEmail:req.body.UserEmail,
-        UserPass: encrypt.generatePassword(req.body.UserPass),
+        //UserPass: encrypt.generatePassword(req.body.UserPass),
         status:req.body.status
     }
     try{

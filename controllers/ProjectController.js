@@ -63,6 +63,31 @@ const getAllProject = async(req,res)=>{
     }
 }
 
+const getProjectByID=async(req,res)=>{
+   try {
+    
+    const id=req.params.id;
+    const project=await projectModel.findById(id)
+    if(project!=null || project!=undefined)
+    {
+        res.status(200).json({
+            message:"Project Fetched successfully",
+            data: project
+        })
+    }
+    else
+    {
+        res.status(404).json({
+            message:"Project not found"
+        })
+    }
+   } catch (error) {
+    res.status(500).json({
+        message: "Server Error",
+        error:error
+    })
+   }
+}
 //Update
 const updateProject=async(req,res)=>{
     const id=req.params.id;
@@ -121,6 +146,7 @@ module.exports={
     createProject,
     getAllProject,
     updateProject,
+    getProjectByID,
     deleteProject
 
 }
