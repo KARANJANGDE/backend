@@ -4,9 +4,8 @@ const createStatus=async(req,res)=>{
     try {
 
         const status={
-            ProjectWork:req.body.ProjectWork,
-            ProjectID:req.body.ProjectID,
-            status:req.body.status
+            Project:req.body.Project,
+            statuses:req.body.statuses
         }
         const savedStatus=await statusModel.create(status)
         if(savedStatus!==null || savedStatus!==undefined)
@@ -33,7 +32,7 @@ const createStatus=async(req,res)=>{
 
 const getallstatus=async(req,res)=>{
     try {
-        const status=await statusModel.find().populate("ProjectID")
+        const status=await statusModel.find().populate("Project")
         if(status!==null||status!==undefined)
         {
             res.status(200).json({
@@ -58,7 +57,8 @@ const getallstatus=async(req,res)=>{
 
 const getStatusByID = async(req, res)=>{
     try {
-        const status=await statusModel.findById(req.params.id).populate("ProjectID")
+        const id=req.params.id
+        const status=await statusModel.findById(id).populate("Project")
         if(status!==null||status!==undefined)
         {
             res.status(200).json({
@@ -85,9 +85,8 @@ const updatestatus=async(req,res)=>{
     try {
         const id=req.params.id;
         const data={
-            ProjectWork:req.body.ProjectWork,
-            ProjectID:req.body.ProjectID,
-            status:req.body.status
+            Project:req.body.Project,
+            statuses:req.body.statuses
         }
 
         const status=await statusModel.findByIdAndUpdate(id,data)
