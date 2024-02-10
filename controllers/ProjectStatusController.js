@@ -57,8 +57,8 @@ const getallstatus=async(req,res)=>{
 
 const getStatusByID = async(req, res)=>{
     try {
-        const id=req.params.id
-        const status=await statusModel.findOne({"statuses._id":id}).populate("Project")
+        const {projectid,statusid}=req.params
+        const status=await statusModel.findOne({"Project":projectid,"statuses._id":statusid}).populate("Project")
         if(status!==null||status!==undefined)
         {
             res.status(200).json({
@@ -85,13 +85,15 @@ const getStatusByID = async(req, res)=>{
 
 const updatestatusbyID=async(req,res)=>{
     try {
-        const id=req.params.id;
-        const status=await statusModel.findOneAndUpdate({"statuses._id":id},{$set:{'statuses.$':req.body}})
-        if(status!==null||status!==undefined)
+     
+        const {status}=req.body;
+        const {projectid,statusid}=req.params;
+        const findstatus=await statusModel.findOneAndUpdate({"Project":projectid,"statuses._id":statusid},{$set:{'statuses.$.status':status}},{ new: true })
+        if(findstatus)
         {
             res.status(200).json({
                 message:"Status Updated Successfully",
-                data:status
+                data:findstatus
             })
         }
         else
