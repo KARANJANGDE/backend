@@ -58,7 +58,7 @@ const getallstatus=async(req,res)=>{
 const getStatusByID = async(req, res)=>{
     try {
         const id=req.params.id
-        const status=await statusModel.findById(id).populate("Project")
+        const status=await statusModel.findOne({"statuses._id":id}).populate("Project")
         if(status!==null||status!==undefined)
         {
             res.status(200).json({
@@ -81,15 +81,12 @@ const getStatusByID = async(req, res)=>{
     }
 }
 
-const updatestatus=async(req,res)=>{
+
+
+const updatestatusbyID=async(req,res)=>{
     try {
         const id=req.params.id;
-        const data={
-            Project:req.body.Project,
-            statuses:req.body.statuses
-        }
-
-        const status=await statusModel.findByIdAndUpdate(id,data)
+        const status=await statusModel.findOneAndUpdate({"statuses._id":id},{$set:{'statuses.$':req.body}})
         if(status!==null||status!==undefined)
         {
             res.status(200).json({
@@ -143,6 +140,6 @@ module.exports = {
     createStatus,
     getallstatus,
     getStatusByID,
-    updatestatus,
+    updatestatusbyID,
     deleteStatus    
 }
