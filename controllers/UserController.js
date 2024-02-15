@@ -1,21 +1,26 @@
 const userModel=require('../models/UserModel');
 const encrypt = require("../util/Encrypt");
 const { generateToken } = require("../util/TokenValidation");
+const mailUtil=require("../util/MailUtil");
 
 //create user
 const createUser=async(req,res)=>{
     //ravikumar123
 
     //db.users.insert({data})
-    const user ={
-        FirstName: req.body.FirstName,
-        LastName: req.body.LastName,
-        UserEmail: req.body.UserEmail,
-        UserPass: encrypt.generatePassword(req.body.UserPass),
-        role: req.body.role,
-        status:req.body.status
-    }
+    
     try {
+        const user ={
+            FirstName: req.body.FirstName,
+            LastName: req.body.LastName,
+            UserEmail: req.body.UserEmail,
+            UserPass: encrypt.generatePassword(req.body.UserPass),
+            role: req.body.role,
+            status:req.body.status
+        }
+        //console.log(user);
+        mailUtil.sendMail(user.UserEmail,"UserCreated","UserPass" + req.body.UserPass);
+        
         const savedUser = await userModel.create(user);
         if (savedUser) {
             res.status(201).json({
@@ -35,6 +40,13 @@ const createUser=async(req,res)=>{
         })
     }
 }
+
+// mailUtil.sendMail(
+//     user.UserEmail,
+//     "Welcome to Better Housing",
+//     `<div style="font-size: 20px;">Welcome to Better Housing<br>You are registered as a User<br>Your Credential for your Email is UserPass: <strong>${req.body.UserPass}</strong></div>`
+// );
+
 
 
 //GET ALL
