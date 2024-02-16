@@ -6,14 +6,14 @@ const equipmentModel=require('../models/EquipmentModel')
 const addEquipment=async(req,res)=>{
 
     //db.users.insert({data})
-    const equipment = {
-        EquipmentName:req.body.EquipmentName,
-        Quantity:req.body.Quantity,
-        ProjectID:req.body.ProjectID,
-        status:req.body.status
-    }
+    
     
     try {
+        const equipment = {
+            Equipment:req.body.Equipment,
+            Quantity:req.body.Quantity,
+            ProjectID:req.body.ProjectID
+        }
         const savedEquipment=await equipmentModel.create(equipment);
         if(savedEquipment){
             res.status(201).json({
@@ -31,6 +31,34 @@ const addEquipment=async(req,res)=>{
             message:"Error Adding Equipment",
             error:err,
             
+        })
+    }
+}
+
+const getAllEquipmentByProjectID =async(req,res)=>{
+
+    
+    try {
+        const {projectid}=req.params;
+        const equipment=await equipmentModel.find({"ProjectID":projectid})//.populate("ProjectID")
+        if(equipment)
+        {
+            res.status(200).json({
+                data: equipment,
+                message:"equipment fetched successfully"
+            })
+        }
+        else
+        {
+            res.status(400).json({
+                message:"equipment Not Found"
+            })
+        }
+        
+    } catch (error) {
+        res.status(500).json({
+            message: "Server Error",
+            error: error
         })
     }
 }
@@ -112,6 +140,7 @@ const removeEquipment = async (req,res)=>{
 module.exports={
     addEquipment,
     getAllEquipment,
+    getAllEquipmentByProjectID,
     updateEquipment,
     removeEquipment
 }

@@ -3,19 +3,22 @@ const Schema =mongoose.Schema;//creation object of schema class
 
 
 const equipmentSchema=new Schema({
-    EquipmentName:{
-        type:String,
-    },
+    Equipment:[{
+        name:{
+            type:String,
+            required:true
+        },
+        status:{
+            type:Boolean,
+            default:true
+        }
+    }],
     Quantity:{
         type:Number,
     },
     ProjectID:{
         type:Schema.Types.ObjectId,
         ref:"project"
-    },
-    status:{
-        type:Boolean,
-        default:true
     }
 })
 
