@@ -40,7 +40,7 @@ const getAllEquipmentByProjectID =async(req,res)=>{
     
     try {
         const {projectid}=req.params;
-        const equipment=await equipmentModel.find({"ProjectID":projectid})//.populate("ProjectID")
+        const equipment=await equipmentModel.find({"ProjectID":projectid}).populate("ProjectID")
         if(equipment)
         {
             res.status(200).json({
@@ -69,7 +69,7 @@ const getAllEquipmentByProjectID =async(req,res)=>{
 const getAllEquipment = async(req,res)=>{
 
     try{
-    const equipment= await equipmentModel.find({status:true}).populate("ProjectID")
+    const equipment= await equipmentModel.find().populate("ProjectID")
         if(equipment)
         {
             res.status(200).json({

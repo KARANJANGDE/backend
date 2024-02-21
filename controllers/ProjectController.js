@@ -3,19 +3,20 @@ const projectModel=require('../models/ProjectModels')
 
 
 const createProject=async(req,res)=>{
-    const project={
-        ProjectName:req.body.ProjectName,
-        StartDate:req.body.StartDate,
-        EndDate:req.body.EndDate,
-        City:req.body.City,
-        State:req.body.State,
-        Country:req.body.Country,
-        Latitude:req.body.Latitude,
-        Longitude:req.body.Longitude,
-        type:req.body.type,
-        status:req.body.status
-    }
+    
     try{
+        const project={
+            ProjectName:req.body.ProjectName,
+            StartDate:req.body.StartDate,
+            EndDate:req.body.EndDate,
+            City:req.body.City,
+            State:req.body.State,
+            Country:req.body.Country,
+            Latitude:req.body.Latitude,
+            Longitude:req.body.Longitude,
+            type:req.body.type,
+            status:req.body.status
+        }
         const savedProject=await projectModel.create(project)
         if(savedProject){
             res.status(201).json({

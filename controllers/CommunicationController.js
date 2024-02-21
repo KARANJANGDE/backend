@@ -1,4 +1,6 @@
 const comModel=require('../models/CommunicationModel');
+const adminModel=require('../models/AdminModel');
+const mailUtil=require('../util/MailUtil');
 
 const requestCommunication=async(req,res)=>{
     try {
@@ -12,6 +14,10 @@ const requestCommunication=async(req,res)=>{
         }
 
         const savedCom=await comModel.create(com);
+        const query= await adminModel.findById(req.body.AdminID);
+        console.log(query);
+
+        mailUtil.sendMail(query.AdminEmail,"Inquiry","Inquiry Issue Details:"+req.body.Inquiry);
         if(savedCom){
             res.status(201).json({
                 message:"Communication created Successfully",

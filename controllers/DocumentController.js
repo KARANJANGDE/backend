@@ -1,4 +1,6 @@
 const documentModel=require("../models/DocumentModel")
+// const pdfParse = require('pdf-parse');
+// const fs = require('fs');
 const multer =require("multer");
 
 const storage=multer.diskStorage({
@@ -6,12 +8,29 @@ const storage=multer.diskStorage({
         cb(null,'./uploads/');
     },
     filename:(req,file,cb)=>{
-    cb(null,file.fieldname);
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const originalName = file.originalname;
+        const fileExtension = originalName.split('.').pop();
+        const uniqueFileName = `${file.fieldname}-${uniqueSuffix}.${fileExtension}`;
+        cb(null, uniqueFileName);
+    // cb(null,file.fieldname);
     }
 })
 
+const fileFilter = (req, file, cb) => {
+    // Check if the file is a PDF
+    if (file.mimetype === 'application/pdf') {
+        // Accept the file
+        cb(null, true);
+    } else {
+        // Reject the file
+        cb(new Error('Only PDF documents are allowed!'), false);
+    }
+};
+
 const upload=multer({
     storage:storage,
+    fileFilter:fileFilter,
     //limits:{fileSize:10000000 }//infile size 1mb
 }).single('document')
 
@@ -37,7 +56,6 @@ const addDocumentInUpload=(req,res)=>{
                 //const savedDocument=await document.save()
                 if(savedDocument)
                 {
-                    console.log("6")
                     res.status(201).json({
                         message:"Document Added Successfully",
                         data:savedDocument
@@ -60,6 +78,60 @@ const addDocumentInUpload=(req,res)=>{
     }
 }
 
+// const addDocumentInUpload = (req, res) => {
+//     try {
+//         upload(req, res, async (err) => {
+//             if (err) {
+//                 return res.status(400).json({
+//                     message: "Error adding document",
+//                     error: err
+//                 });
+//             }
+
+//             // Extract text from the uploaded PDF file
+//             const dataBuffer = fs.readFileSync(req.file.path);
+//             pdfParse(dataBuffer).then(async function(data) {
+//                 // Here, data.text contains the extracted text from the PDF
+//                 console.log(data.text); // You can process or store the extracted text as needed
+
+//                 const document = {
+//                     DocumentName: req.body.DocumentName,
+//                     DocumentType: req.body.DocumentType,
+//                     FilePath: req.file.path,
+//                     ProjectID: req.body.ProjectID,
+//                     status: req.body.status,
+//                     Content: data.text // Optionally store the extracted text in your database
+//                 };
+
+//                 const savedDocument = await documentModel.create(document);
+//                 if (savedDocument) {
+//                     res.status(201).json({
+//                         message: "Document Added Successfully",
+//                         data: savedDocument
+//                     });
+//                 } else {
+//                     res.status(404).json({
+//                         message: "Document Not Added"
+//                     });
+//                 }
+//             }).catch(error => {
+//                 console.error("Error extracting text from PDF:", error);
+//                 res.status(500).json({
+//                     message: "Error processing document",
+//                     error: error
+//                 });
+//             });
+
+//         });
+
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({
+//             message: "Server Error",
+//             error: error
+//         });
+//     }
+// };
 
 
 const getAllDocument=async(req,res)=>{
