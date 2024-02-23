@@ -6,7 +6,7 @@ const statusSchema=new Schema({
         type:Schema.Types.ObjectId,
         ref:'project'
     },
-    statuses:[{
+    
         name:{
             type:String,
             required:true
@@ -16,7 +16,7 @@ const statusSchema=new Schema({
             enum:["Pending","Done","NotStarted"],
             default:"NotStarted"
         },
-    }],
+
 });
 
 module.exports=mongoose.model("status",statusSchema);

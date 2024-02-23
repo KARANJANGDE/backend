@@ -3,11 +3,7 @@ const statusModel=require('../models/ProjectStatusModel')
 const createStatus=async(req,res)=>{
     try {
 
-        const status={
-            Project:req.body.Project,
-            statuses:req.body.statuses
-        }
-        const savedStatus=await statusModel.create(status)
+        const savedStatus=await statusModel.create(req.body)
         if(savedStatus!==null || savedStatus!==undefined)
         {
             res.status(201).json({
@@ -56,9 +52,10 @@ const getallstatus=async(req,res)=>{
 }
 
 const getStatusByID = async(req, res)=>{
+
     try {
-        const {projectid,statusid}=req.params
-        const status=await statusModel.findOne({"Project":projectid,"statuses._id":statusid}).populate("Project")
+        const id=req.params.id;
+        const status=await statusModel.findById(id).populate("Project")
         if(status!==null||status!==undefined)
         {
             res.status(200).json({
@@ -74,21 +71,25 @@ const getStatusByID = async(req, res)=>{
         }
         
     } catch (error) {
+        console.log(error);
         res.status(500).json({
-            message: "Server Error",
-            error: error
+            message:"server error",
+            error:error,
+            
         })
     }
 }
 
 
-
 const updatestatusbyID=async(req,res)=>{
     try {
+        const id=req.params.id;
+        const data={
+            status:req.body.status,
+        }
      
-        const {status}=req.body;
-        const {projectid,statusid}=req.params;
-        const findstatus=await statusModel.findOneAndUpdate({"Project":projectid,"statuses._id":statusid},{$set:{'statuses.$.status':status}},{ new: true })
+        const findstatus=await statusModel.findByIdAndUpdate(id,data);
+       
         if(findstatus)
         {
             res.status(200).json({
