@@ -9,12 +9,12 @@ const addEquipment=async(req,res)=>{
     
     
     try {
-        const equipment = {
-            Equipment:req.body.Equipment,
-            Quantity:req.body.Quantity,
-            ProjectID:req.body.ProjectID
-        }
-        const savedEquipment=await equipmentModel.create(equipment);
+        // const equipment = {
+        //     Equipment:req.body.Equipment,
+        //     Quantity:req.body.Quantity,
+        //     ProjectID:req.body.ProjectID
+        // }
+        const savedEquipment=await equipmentModel.create(req.body);
         if(savedEquipment){
             res.status(201).json({
                 message:"Equipment Added Successfully",
@@ -45,6 +45,32 @@ const getAllEquipmentByProjectID =async(req,res)=>{
         {
             res.status(200).json({
                 data: equipment,
+                message:"equipment fetched successfully"
+            })
+        }
+        else
+        {
+            res.status(400).json({
+                message:"equipment Not Found"
+            })
+        }
+        
+    } catch (error) {
+        res.status(500).json({
+            message: "Server Error",
+            error: error
+        })
+    }
+}
+
+const getEquipmentByid=async(req,res)=>{
+    try {
+        const id=req.params.id;
+        const savedEquipment= await equipmentModel.findById(id).populate("ProjectID");
+        if(savedEquipment!==null||savedEquipment!==undefined)
+        {
+            res.status(200).json({
+                data: savedEquipment,
                 message:"equipment fetched successfully"
             })
         }
@@ -141,6 +167,7 @@ module.exports={
     addEquipment,
     getAllEquipment,
     getAllEquipmentByProjectID,
+    getEquipmentByid,
     updateEquipment,
     removeEquipment
 }

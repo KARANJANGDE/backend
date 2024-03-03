@@ -2,10 +2,10 @@ const mongoose=require('mongoose');
 const Schema=mongoose.Schema;
 
 const comScehma=new Schema({
-    AdminID:{
-        type:Schema.Types.ObjectId,
-        ref:'Admin'
-    },
+    // AdminID:{
+    //     type:Schema.Types.ObjectId,
+    //     ref:'Admin'
+    // },
     UserID:{
         type:Schema.Types.ObjectId,
         ref:'User'
