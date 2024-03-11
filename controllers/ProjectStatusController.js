@@ -81,6 +81,32 @@ const getStatusByID = async(req, res)=>{
 }
 
 
+const getstatusbyprojectid=async(req,res)=>{
+    try {
+        const {projectid}=req.params;
+        const status=await statusModel.find({"Project":projectid}).populate("Project")
+        if(status!==null||status!==undefined)
+        {
+            res.status(200).json({
+                message:"Status fetched successfully",
+                data:status
+            })
+        }
+        else
+        {
+            res.status(404).json({
+                message:"Status not fetched"
+            })
+        }
+        
+    } catch (error) {
+        res.status(500).json({
+            message: "Server Error",
+            error: error
+        })
+    }
+}
+
 const updatestatusbyID=async(req,res)=>{
     try {
         const id=req.params.id;
@@ -142,6 +168,7 @@ const deleteStatus=async(req,res)=>{
 module.exports = {
     createStatus,
     getallstatus,
+    getstatusbyprojectid,
     getStatusByID,
     updatestatusbyID,
     deleteStatus    

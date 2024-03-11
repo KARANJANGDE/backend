@@ -62,6 +62,28 @@ const getAllAdmin = async(req,res)=>{
 
 }
 
+const getadminbyid=async(req,res)=>{
+    const id=req.params.id;
+    try {
+        const admin = await adminModel.findById(id).populate("role")
+        if (admin) {
+            res.status(200).json({
+              message: "Admin fetched successfully",
+              data: admin,
+            });
+          } else {
+            res.status(400).json({
+              message: "Admin not fetched",
+            });
+          }
+        
+    } catch (error) {
+        res.status(500).json({
+            message:error.message
+        })
+    }
+}
+
 
 //Update
 
@@ -126,11 +148,14 @@ const loginAdmin = async (req, res) => {
             const flag = encrypt.comparePassword(password, admin.AdminPass);
             if (flag) {
                 const token = generateToken(admin.toObject());
-                console.log("Token:- ", token);
+                //console.log("Token:- ", token);
                 res.status(200).json({
                     message: "Login Successful",
-                    data: token,
-                    role: admin.role.roleName
+                    data: {
+                        //token: token, // Send the token
+                        id: admin._id, // Include user's ID
+                        role: admin.role.Name
+                    },
                 })
             } else {
                 res.status(404).json({
@@ -151,6 +176,7 @@ const loginAdmin = async (req, res) => {
 module.exports={
     createAdmin,
     getAllAdmin,
+    getadminbyid,
     updateAdmin,
     deleteAdmin,
     loginAdmin

@@ -2,10 +2,11 @@ const mongoose=require('mongoose');
 const Schema=mongoose.Schema;
 
 const statusSchema=new Schema({
-    Project:{
-        type:Schema.Types.ObjectId,
-        ref:'project'
-    },
+
+        Project:{
+            type:Schema.Types.ObjectId,
+            ref:'project'
+        },
     
         name:{
             type:String,

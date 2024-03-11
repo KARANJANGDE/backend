@@ -75,7 +75,7 @@ const getAllUser = async(req,res)=>{
 const getUserbyID=async(req,res)=>{
     try {
         const id=req.params.id;
-        const user=await userModel.findById(id)
+        const user=await userModel.findById(id).populate('role')
         if(user!=null || user!=undefined)
         res.status(200).json({
             message:"User Fetched successfully",
@@ -154,11 +154,14 @@ const loginUser = async (req, res) => {
             const flag = encrypt.comparePassword(password, user.UserPass);
             if (flag) {
                 const token = generateToken(user.toObject());
-                console.log("Token:- ", token);
+                //console.log("Token:- ", token);
                 res.status(200).json({
                     message: "Login Successful",
-                    data: token,
-                    role: user.role.roleName
+                    data: {
+                        //token: token, // Send the token
+                        id: user._id, // Include user's ID
+                        role: user.role.Name
+                    },
                 })
             } else {
                 res.status(404).json({
