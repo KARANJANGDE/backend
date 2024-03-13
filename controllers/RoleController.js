@@ -65,6 +65,32 @@ const getAllRole = async(req,res)=>{
     }
 }
 
+
+const getRoleById=async(req,res)=>{
+    try {
+        const id=req.params.id;
+        const role=await roleModel.findById(id)
+        if(role!=null || role!=undefined)
+        {
+            res.status(200).json({
+                data: role,
+                message:"Role fetched successfully"
+            })
+        }
+        else
+        {
+            res.status(400).json({
+                message:"Role Not Found"
+            })
+        }
+        
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
 //deleterole
 const deleteRole = async (req,res)=>{
     const id= req.params.id;
@@ -93,6 +119,7 @@ const deleteRole = async (req,res)=>{
 module.exports={
    createRole,
    updateRole,
+   getRoleById,
    getAllRole,
    deleteRole
 }

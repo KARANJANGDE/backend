@@ -107,6 +107,35 @@ const getstatusbyprojectid=async(req,res)=>{
     }
 }
 
+const getStatusByProjectAndStatus = async(req, res) => {
+    try {
+        const { projectid, status } = req.params; // Assuming you're passing status as a URL parameter now
+        // Adjust the query to filter by the provided status, considering case sensitivity
+        const statuses = await statusModel.find({
+            "Project": projectid,
+            "status": { $regex: new RegExp("^" + status + "$", "i") } // This makes the status check case-insensitive
+        }).populate("Project");
+
+        if (statuses.length > 0) {
+            res.status(200).json({
+                message: `${status} statuses fetched successfully`,
+                data: statuses
+            });
+        } else {
+            res.status(404).json({
+                message: `No ${status} statuses found for the specified project`
+            });
+        }
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Server Error",
+            error: error
+        });
+    }
+}
+
+
 const updatestatusbyID=async(req,res)=>{
     try {
         const id=req.params.id;
@@ -171,5 +200,6 @@ module.exports = {
     getstatusbyprojectid,
     getStatusByID,
     updatestatusbyID,
+    getStatusByProjectAndStatus,
     deleteStatus    
 }

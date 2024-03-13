@@ -15,11 +15,12 @@ const createUser=async(req,res)=>{
             LastName: req.body.LastName,
             UserEmail: req.body.UserEmail,
             UserPass: encrypt.generatePassword(req.body.UserPass),
+            ProjectID:req.body.ProjectID,
             role: req.body.role,
             status:req.body.status
         }
         //console.log(user);
-        mailUtil.sendMail(user.UserEmail,"UserCreated","UserPass" + req.body.UserPass);
+        //mailUtil.sendMail(user.UserEmail,"UserCreated","UserPass" + req.body.UserPass);
         
         const savedUser = await userModel.create(user);
         if (savedUser) {
@@ -53,7 +54,7 @@ const createUser=async(req,res)=>{
 const getAllUser = async(req,res)=>{
 
     try{    
-    const user = await userModel.find({status:true}).populate("role")
+    const user = await userModel.find({status:true}).populate("role").populate("ProjectID")
     if(user){
         res.status(200).json({
             data: user,
@@ -75,7 +76,7 @@ const getAllUser = async(req,res)=>{
 const getUserbyID=async(req,res)=>{
     try {
         const id=req.params.id;
-        const user=await userModel.findById(id).populate('role')
+        const user=await userModel.findById(id).populate('role').populate('ProjectID')
         if(user!=null || user!=undefined)
         res.status(200).json({
             message:"User Fetched successfully",

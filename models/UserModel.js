@@ -18,6 +18,10 @@ const userSchema=new Schema({
         type:Schema.Types.ObjectId,
         ref:"role"
     },
+    ProjectID:{
+        type:Schema.Types.ObjectId,
+        ref:"project"
+    },
     status:{
         type:Boolean,
         default:true
